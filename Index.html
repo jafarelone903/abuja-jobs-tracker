@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abuja Jobs Tracker 🇳🇬</title>
+<style>
+*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif}
+body{margin:0;background:#f6f7f9;color:#111}
+header{background:#0f172a;color:#fff;padding:22px 16px 18px}
+header h1{margin:0;font-size:24px} header p{opacity:.8;margin:6px 0 0;font-size:14px}
+.wrap{max-width:760px;margin:0 auto;padding:16px}
+.card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:14px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin:6px 0;font-size:15px}
+button{border:0;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer}
+.btn{background:#16a34a;color:#fff;width:100%;font-size:16px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filters button{background:#e5e7eb;color:#111;padding:9px 14px}
+.filters button.active{background:#111;color:#fff}
+.job{border:1px solid #eee;border-radius:14px;padding:14px;margin-bottom:10px;background:#fff}
+.job h3{margin:0 0 4px;font-size:17px}
+.job small{color:#666}
+.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;margin-top:8px}
+.applied{background:#dbeafe;color:#1d4ed8}.interview{background:#fef3c7;color:#92400e}.offer{background:#dcfce7;color:#166534}.rejected{background:#fee2e2;color:#991b1b}.saved{background:#f3e4ff;color:#7e22ce}
+.row{display:flex;gap:8px;margin-top:10px}
+.row button{flex:1}.del{background:#fee2e2;color:#991b1b}.link{background:#111;color:#fff;text-decoration:none;text-align:center;padding:12px;border-radius:10px;flex:1;display:block}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.stat{background:#fff;border-radius:14px;padding:12px;text-align:center}
+.stat b{font-size:20px;display:block}.stat span{font-size:12px;color:#666}
+</style>
+</head>
+<body>
+<header><h1>Abuja Jobs Tracker 🇳🇬</h1><p>Track remote jobs from Abuja • Saved on this device</p></header>
+<div class="wrap">
+<div class="stats">
+<div class="stat"><b id="cAll">0</b><span>Total</span></div>
+<div class="stat"><b id="cApplied">0</b><span>Applied</span></div>
+<div class="stat"><b id="cInterview">0</b><span>Interview</span></div>
+<div class="stat"><b id="cOffer">0</b><span>Offer</span></div>
+</div>
+<div class="card">
+<h3 style="margin:0 0 8px">+ Add New Job</h3>
+<input id="company" placeholder="Company e.g. Paystack">
+<input id="role" placeholder="Role e.g. Frontend Developer">
+<input id="link" placeholder="Job link https://...">
+<select id="status"><option value="Saved">📌 Saved</option><option value="Applied">✅ Applied</option><option value="Interview">🎤 Interview</option><option value="Offer">🎉 Offer</option><option value="Rejected">❌ Rejected</option></select>
+<input id="salary" placeholder="Salary e.g. $2,000 / month (optional)">
+<textarea id="notes" placeholder="Notes..."></textarea>
+<button class="btn" onclick="addJob()">Save Job</button>
+</div>
+<div class="filters" id="filters"></div>
+<div id="list"></div>
+<p style="text-align:center;color:#888;font-size:13px">Built for developers in Abuja applying to remote roles 🌍</p>
+</div>
+<script>
+let jobs=JSON.parse(localStorage.getItem('abujaJobs')||'[]');
+let filter='All';
+const statuses=['All','Saved','Applied','Interview','Offer','Rejected'];
+function renderFilters(){
+document.getElementById('filters').innerHTML=statuses.map(s=>`<button class="${filter===s?'active':''}" onclick="setFilter('${s}')">${s}</button>`).join('');
+}
+function setFilter(s){filter=s;render();}
+function addJob(){
+let c=document.getElementById('company').value.trim();
+let r=document.getElementById('role').value.trim();
+if(!c||!r){alert('Please add Company and Role');return;}
+jobs.unshift({id:Date.now(),company:c,role:r,link:document.getElementById('link').value.trim(),status:document.getElementById('status').value,salary:document.getElementById('salary').value.trim(),notes:document.getElementById('notes').value.trim(),date:new Date().toLocaleDateString()});
+localStorage.setItem('abujaJobs',JSON.stringify(jobs));
+['company','role','link','salary','notes'].forEach(id=>document.getElementById(id).value='');
+render();
+}
+function del(id){if(confirm('Delete this job?')){jobs=jobs.filter(j=>j.id!==id);localStorage.setItem('abujaJobs',JSON.stringify(jobs));render();}}
+function changeStatus(id,val){let j=jobs.find(x=>x.id===id);j.status=val;localStorage.setItem('abujaJobs',JSON.stringify(jobs));render();}
+function render(){
+renderFilters();
+let list=jobs.filter(j=>filter==='All'||j.status===filter);
+document.getElementById('cAll').textContent=jobs.length;
+document.getElementById('cApplied').textContent=jobs.filter(j=>j.status==='Applied').length;
+document.getElementById('cInterview').textContent=jobs.filter(j=>j.status==='Interview').length;
+document.getElementById('cOffer').textContent=jobs.filter(j=>j.status==='Offer').length;
+document.getElementById('list').innerHTML=list.length?list.map(j=>`
+<div class="job"><h3>${j.role} @ ${j.company}</h3><small>${j.date} ${j.salary?'• '+j.salary:''}</small><br><span class="badge ${j.status.toLowerCase()}">${j.status}</span><p style="color:#444;font-size:14px">${j.notes||''}</p>
+<div class="row">${j.link?`<a class="link" href="${j.link}" target="_blank">Open Job ↗</a>`:''}<select onchange="changeStatus(${j.id},this.value)" style="flex:1"><option ${j.status==='Saved'?'selected':''}>Saved</option><option ${j.status==='Applied'?'selected':''}>Applied</option><option ${j.status==='Interview'?'selected':''}>Interview</option><option ${j.status==='Offer'?'selected':''}>Offer</option><option ${j.status==='Rejected'?'selected':''}>Rejected</option></select><button class="del" onclick="del(${j.id})">Delete</button></div></div>`).join(''):'<div class="card" style="text-align:center">No jobs yet. Add your first job above 👆</div>';
+}
+render();
+</script>
+</body>
+</html>
