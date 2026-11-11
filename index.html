@@ -7,130 +7,72 @@
 <style>
 *{box-sizing:border-box;font-family:-apple-system,system-ui,sans-serif}
 body{margin:0;background:#f6f7f9;color:#111}
-header{background:#0f172a;color:#fff;padding:22px 16px}
-header h1{margin:0;font-size:24px}
-header p{margin:6px 0 0;opacity:.8;font-size:14px}
-.wrap{max-width:760px;margin:0 auto;padding:14px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.stat{background:#fff;border-radius:14px;padding:12px 6px;text-align:center}
+header{background:#0f172a;color:#fff;padding:20px}
+.wrap{max-width:760px;margin:0 auto;padding:16px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{background:#fff;border-radius:14px;padding:14px;text-align:center}
 .stat b{font-size:20px;display:block}
 .stat span{font-size:12px;color:#666}
-.bar{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:8px 0 14px}
-.bar i{display:block;height:100%;background:#16a34a;width:0%}
-.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px}
-input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin-bottom:10px;font-size:15px}
-button{border:0;border-radius:10px;padding:12px;cursor:pointer;font-weight:700}
-.btn{background:#16a34a;color:#fff;width:100%;font-size:16px}
-.row{display:flex;gap:8px;flex-wrap:wrap}
-.row button{flex:1;background:#e5e7eb;color:#111;padding:10px}
-.row button.active{background:#111;color:#fff}
-.job{border:1px solid #eee;border-radius:14px;padding:12px;margin-top:10px}
+.card{background:#fff;border-radius:16px;padding:16px;margin-top:16px}
+input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin-bottom:10px;font-size:16px}
+button{width:100%;padding:14px;border:0;border-radius:10px;background:#16a34a;color:#fff;font-size:17px;font-weight:700}
+.job{background:#f9fafb;border:1px solid #eee;border-radius:12px;padding:12px;margin-top:10px}
 .job b{font-size:17px}
-.job small{color:#666;display:block;margin:3px 0}
-.badge{display:inline-block;padding:4px 8px;border-radius:99px;font-size:12px;font-weight:700;background:#dcfce7}
-.top{display:flex;justify-content:space-between;gap:8px}
-.icon{font-size:20px}
-.mini{font-size:13px;padding:8px 10px;background:#f1f5f9}
-.danger{background:#fee2e2}
+.del{background:#fee2e2;color:#b91c1c;padding:6px 10px;width:auto;font-size:13px;margin-top:8px}
 </style>
 </head>
 <body>
-<header><h1>Abuja Jobs Tracker 🇳🇬</h1><p>Track remote jobs from Abuja • Saved on this device</p></header>
+<header><h1 style="margin:0">Abuja Jobs Tracker 🇳🇬</h1><p>Track remote jobs from Abuja • Saved on this device</p></header>
 <div class="wrap">
 <div class="stats">
 <div class="stat"><b id="tTotal">0</b><span>Total</span></div>
 <div class="stat"><b id="tApplied">0</b><span>Applied</span></div>
-<div class="stat"><b id="tInt">0</b><span>Interview</span></div>
+<div class="stat"><b id="tInterview">0</b><span>Interview</span></div>
 <div class="stat"><b id="tOffer">0</b><span>Offer</span></div>
 </div>
-<div class="bar"><i id="progress"></i></div>
-<p id="progressText" style="font-size:13px;color:#666;margin:0 0 12px">0% to Offer — keep applying!</p>
-
 <div class="card">
-<h2 style="margin:0 0 12px">+ Add New Job</h2>
-<input id="company" placeholder="Company e.g. Paystack">
-<input id="role" placeholder="Role e.g. Frontend Developer">
+<h2>+ Add New Job</h2>
+<input id="company" placeholder="Company e.g. Test">
+<input id="role" placeholder="Role e.g. Test">
 <input id="link" placeholder="Job link https://...">
-<select id="status"><option>📌 Saved</option><option>📩 Applied</option><option>🎤 Interview</option><option>🎉 Offer</option><option>❌ Rejected</option></select>
+<select id="status"><option>📌 Saved</option><option>✅ Applied</option><option>🎤 Interview</option><option>🎉 Offer</option><option>❌ Rejected</option></select>
 <input id="salary" placeholder="Salary e.g. $2,000 / month (optional)">
-<label style="font-size:13px;color:#666">Deadline</label>
 <input id="deadline" type="date">
-<label style="font-size:13px;color:#666">Date Applied</label>
-<input id="appliedDate" type="date">
-<textarea id="notes" placeholder="Notes..."></textarea>
-<button class="btn" onclick="saveJob()">Save Job</button>
-</div>
-
-<div class="card">
-<input id="search" placeholder="🔍 Search company or role..." oninput="render()">
-<div class="row" style="margin-top:4px">
-<button onclick="setFilter('All',this)" class="active">All</button>
-<button onclick="setFilter('Saved',this)">Saved</button>
-<button onclick="setFilter('Applied',this)">Applied</button>
-<button onclick="setFilter('Interview',this)">Interview</button>
-<button onclick="setFilter('Offer',this)">Offer</button>
-<button onclick="setFilter('Rejected',this)">Rejected</button>
-</div>
-<div class="row" style="margin-top:8px">
-<button class="mini" onclick="shareWhatsApp()">📤 Share to WhatsApp</button>
-<button class="mini" onclick="exportCSV()">⬇️ Export CSV</button>
-<button class="mini danger" onclick="clearAll()">🗑️ Clear All</button>
+<input id="applied" type="date">
+<button id="saveBtn">Save Job</button>
 </div>
 <div id="list"></div>
-<p id="empty" style="text-align:center;color:#888">No jobs yet. Add your first job above 👆</p>
-</div>
 </div>
 <script>
-let jobs=JSON.parse(localStorage.getItem('abujaJobsV2')||'[]');
-let filter='All';
-let editId=null;
-function saveJob(){
-let c=company.value.trim(),r=role.value.trim();
-if(!c||!r){alert('Add Company + Role');return}
-let data={id:editId||Date.now(),company:c,role:r,link:link.value.trim(),status:status.value,salary:salary.value.trim(),deadline:deadline.value,appliedDate:appliedDate.value,notes:notes.value.trim()};
-if(editId){jobs=jobs.map(j=>j.id==editId?data:j);editId=null}else jobs.unshift(data);
-localStorage.setItem('abujaJobsV2',JSON.stringify(jobs));
-['company','role','link','salary','deadline','appliedDate','notes'].forEach(id=>document.getElementById(id).value='');
-render();
-}
-function setFilter(f,btn){filter=f;document.querySelectorAll('.row button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render()}
-function del(id){if(confirm('Delete this job?')){jobs=jobs.filter(j=>j.id!=id);localStorage.setItem('abujaJobsV2',JSON.stringify(jobs));render()}}
-function edit(id){let j=jobs.find(x=>x.id==id);company.value=j.company;role.value=j.role;link.value=j.link;status.value=j.status;salary.value=j.salary;deadline.value=j.deadline;appliedDate.value=j.appliedDate;notes.value=j.notes;editId=id;window.scrollTo({top:0,behavior:'smooth'})}
-function changeStatus(id,val){jobs=jobs.map(j=>j.id==id?{...j,status:val}:j);localStorage.setItem('abujaJobsV2',JSON.stringify(jobs));render()}
-function shareWhatsApp(){let t='My Abuja Jobs Tracker 🇳🇬\n\n'+jobs.map(j=>`• ${j.company} - ${j.role} [${j.status}] ${j.deadline?'Deadline: '+j.deadline:''}`).join('\n');window.open('https://wa.me/?text='+encodeURIComponent(t))}
-function exportCSV(){let csv='Company,Role,Status,Salary,Deadline,Date Applied,Link,Notes\n'+jobs.map(j=>`"${j.company}","${j.role}","${j.status}","${j.salary}","${j.deadline}","${j.appliedDate}","${j.link}","${j.notes}"`).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='abuja-jobs.csv';a.click()}
-function clearAll(){if(confirm('Delete ALL jobs?')){jobs=[];localStorage.setItem('abujaJobsV2','[]');render()}}
+var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+var company = document.getElementById('company');
+var role = document.getElementById('role');
+var link = document.getElementById('link');
+var statusEl = document.getElementById('status');
+var salary = document.getElementById('salary');
+var deadline = document.getElementById('deadline');
+var applied = document.getElementById('applied');
 function render(){
-let q=search.value.toLowerCase();
-let filtered=jobs.filter(j=>(filter=='All'||j.status.includes(filter))&&(j.company.toLowerCase().includes(q)||j.role.toLowerCase().includes(q)));
-tTotal.textContent=jobs.length;
-tApplied.textContent=jobs.filter(j=>j.status.includes('Applied')).length;
-tInt.textContent=jobs.filter(j=>j.status.includes('Interview')).length;
-tOffer.textContent=jobs.filter(j=>j.status.includes('Offer')).length;
-let pct=jobs.length?Math.round(jobs.filter(j=>j.status.includes('Offer')).length/jobs.length*100):0;
-progress.style.width=pct+'%';progressText.textContent=pct+'% to Offer — keep applying! ('+jobs.length+' total)';
-empty.style.display=filtered.length?'none':'block';
-list.innerHTML=filtered.map(j=>`<div class="job"><div class="top"><b>${j.company} — ${j.role}</b><span class="icon">${j.status.includes('Offer')?'🎉':j.status.includes('Interview')?'🎤':j.status.includes('Rejected')?'❌':'📌'}</span></div><small>${j.salary||''} ${j.deadline?'• 📅 Deadline: '+j.deadline:''} ${j.appliedDate?'• Applied: '+j.appliedDate:''}</small><small>${j.notes||''}</small><span class="badge">${j.status}</span><div class="row" style="margin-top:10px"><select class="mini" onchange="changeStatus(${j.id},this.value)"><option>📌 Saved</option><option>📩 Applied</option><option>🎤 Interview</option><option>🎉 Offer</option><option>❌ Rejected</option></select><button class="mini" onclick="edit(${j.id})">✏️ Edit</button><button class="mini" onclick="window.open('${j.link||'#'}')">🔗 Open</button><button class="mini danger" onclick="del(${j.id})">Delete</button></div></div>`).join('');
-// set select values
-document.querySelectorAll('#list select').forEach((s,i)=>s.value=filtered[i].status);
+document.getElementById('tTotal').textContent = jobs.length;
+document.getElementById('tApplied').textContent = jobs.filter(function(j){return j.status.indexOf('Applied')>-1}).length;
+document.getElementById('tInterview').textContent = jobs.filter(function(j){return j.status.indexOf('Interview')>-1}).length;
+document.getElementById('tOffer').textContent = jobs.filter(function(j){return j.status.indexOf('Offer')>-1}).length;
+var html = '';
+jobs.forEach(function(j,i){
+html += '<div class="job"><b>'+j.company+' — '+j.role+'</b><br>'+j.status+'<br><button class="del" onclick="delJob('+i+')">Delete</button></div>';
+});
+document.getElementById('list').innerHTML = html;
 }
-let company=document.getElementById('company')
-let role=document.getElementById('role')
-let link=document.getElementById('link')
-let status=document.getElementById('status')
-let salary=document.getElementById('salary')
-let deadline=document.getElementById('deadline')
-let appliedDate=document.getElementById('appliedDate')
-let notes=document.getElementById('notes')
-let search=document.getElementById('search')
-let list=document.getElementById('list')
-let empty=document.getElementById('empty')
-let total=document.getElementById('total')
-let applied=document.getElementById('applied')
-let interview=document.getElementById('interview')
-let offer=document.getElementById('offer')
-let bar=document.getElementById('bar')
-let pct=document.getElementById('pct')
+function delJob(i){ jobs.splice(i,1); localStorage.setItem('jobs', JSON.stringify(jobs)); render(); }
+document.getElementById('saveBtn').onclick = function(){
+if(!company.value || !role.value){ alert('Type company and role'); return; }
+jobs.push({company:company.value, role:role.value, link:link.value, status:statusEl.value, salary:salary.value, deadline:deadline.value, applied:applied.value});
+localStorage.setItem('jobs', JSON.stringify(jobs));
+company.value=''; role.value=''; link.value=''; salary.value='';
 render();
+alert('Saved!');
+};
+render();
+</script>
 </body>
 </html>
