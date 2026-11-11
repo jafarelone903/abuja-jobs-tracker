@@ -114,7 +114,6 @@ list.innerHTML=filtered.map(j=>`<div class="job"><div class="top"><b>${j.company
 // set select values
 document.querySelectorAll('#list select').forEach((s,i)=>s.value=filtered[i].status);
 }
-render();
 let company=document.getElementById('company')
 let role=document.getElementById('role')
 let link=document.getElementById('link')
@@ -132,6 +131,6 @@ let interview=document.getElementById('interview')
 let offer=document.getElementById('offer')
 let bar=document.getElementById('bar')
 let pct=document.getElementById('pct')
-
+render();
 </body>
 </html>
