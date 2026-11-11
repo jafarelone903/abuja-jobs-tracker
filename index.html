@@ -14,11 +14,13 @@ header{background:#0f172a;color:#fff;padding:20px}
 .stat b{font-size:20px;display:block}
 .stat span{font-size:12px;color:#666}
 .card{background:#fff;border-radius:16px;padding:16px;margin-top:16px}
-input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin-bottom:10px;font-size:16px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin-bottom:10px;font-size:16px}
 button{width:100%;padding:14px;border:0;border-radius:10px;background:#16a34a;color:#fff;font-size:17px;font-weight:700}
 .job{background:#f9fafb;border:1px solid #eee;border-radius:12px;padding:12px;margin-top:10px}
 .job b{font-size:17px}
+.job a{color:#2563eb;word-break:break-all}
 .del{background:#fee2e2;color:#b91c1c;padding:6px 10px;width:auto;font-size:13px;margin-top:8px}
+.small{font-size:13px;color:#555;margin-top:4px}
 </style>
 </head>
 <body>
@@ -32,13 +34,16 @@ button{width:100%;padding:14px;border:0;border-radius:10px;background:#16a34a;co
 </div>
 <div class="card">
 <h2>+ Add New Job</h2>
-<input id="company" placeholder="Company e.g. Test">
-<input id="role" placeholder="Role e.g. Test">
+<input id="company" placeholder="Company e.g. Toptal">
+<input id="role" placeholder="Role e.g. Frontend Developer">
 <input id="link" placeholder="Job link https://...">
 <select id="status"><option>📌 Saved</option><option>✅ Applied</option><option>🎤 Interview</option><option>🎉 Offer</option><option>❌ Rejected</option></select>
 <input id="salary" placeholder="Salary e.g. $2,000 / month (optional)">
+<label style="font-size:13px;color:#666">Deadline</label>
 <input id="deadline" type="date">
+<label style="font-size:13px;color:#666">Date Applied</label>
 <input id="applied" type="date">
+<textarea id="notes" placeholder="Notes e.g. Recruiter name, referral, next step"></textarea>
 <button id="saveBtn">Save Job</button>
 </div>
 <div id="list"></div>
@@ -52,6 +57,8 @@ var statusEl = document.getElementById('status');
 var salary = document.getElementById('salary');
 var deadline = document.getElementById('deadline');
 var applied = document.getElementById('applied');
+var notes = document.getElementById('notes');
+function esc(s){ return (s||'').replace(/</g,'&lt;'); }
 function render(){
 document.getElementById('tTotal').textContent = jobs.length;
 document.getElementById('tApplied').textContent = jobs.filter(function(j){return j.status.indexOf('Applied')>-1}).length;
@@ -59,16 +66,21 @@ document.getElementById('tInterview').textContent = jobs.filter(function(j){retu
 document.getElementById('tOffer').textContent = jobs.filter(function(j){return j.status.indexOf('Offer')>-1}).length;
 var html = '';
 jobs.forEach(function(j,i){
-html += '<div class="job"><b>'+j.company+' — '+j.role+'</b><br>'+j.status+'<br><button class="del" onclick="delJob('+i+')">Delete</button></div>';
+var linkHtml = j.link ? '<div class="small"><a href="'+esc(j.link)+'" target="_blank">🔗 Open Job Link</a></div>' : '';
+var salHtml = j.salary ? '<div class="small">💰 '+esc(j.salary)+'</div>' : '';
+var deadHtml = j.deadline ? '<div class="small">⏰ Deadline: '+esc(j.deadline)+'</div>' : '';
+var appHtml = j.applied ? '<div class="small">📅 Applied: '+esc(j.applied)+'</div>' : '';
+var noteHtml = j.notes ? '<div class="small">📝 '+esc(j.notes)+'</div>' : '';
+html += '<div class="job"><b>'+esc(j.company)+' — '+esc(j.role)+'</b><br>'+esc(j.status)+linkHtml+salHtml+deadHtml+appHtml+noteHtml+'<br><button class="del" onclick="delJob('+i+')">Delete</button></div>';
 });
 document.getElementById('list').innerHTML = html;
 }
 function delJob(i){ jobs.splice(i,1); localStorage.setItem('jobs', JSON.stringify(jobs)); render(); }
 document.getElementById('saveBtn').onclick = function(){
 if(!company.value || !role.value){ alert('Type company and role'); return; }
-jobs.push({company:company.value, role:role.value, link:link.value, status:statusEl.value, salary:salary.value, deadline:deadline.value, applied:applied.value});
+jobs.push({company:company.value, role:role.value, link:link.value, status:statusEl.value, salary:salary.value, deadline:deadline.value, applied:applied.value, notes:notes.value});
 localStorage.setItem('jobs', JSON.stringify(jobs));
-company.value=''; role.value=''; link.value=''; salary.value='';
+company.value=''; role.value=''; link.value=''; salary.value=''; deadline.value=''; applied.value=''; notes.value='';
 render();
 alert('Saved!');
 };
