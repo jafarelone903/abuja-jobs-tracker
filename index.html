@@ -55,11 +55,16 @@ button{width:100%;padding:14px;border:0;border-radius:10px;background:#16a34a;co
 </div>
 <div id="list"></div>
 </div>
+<div style="text-align:center;padding:20px;color:#666;font-size:14px;line-height:1.6">
+Made with ❤️ in Abuja by <b>Jafar Muktar Nafiu</b><br>
+Founder, Abuja Jobs Tracker 🇳🇬<br>
+<a href="https://abuja-jobs-tracker-app.vercel.app" style="color:#2563eb">abuja-jobs-tracker-app.vercel.app</a>
+</div>
 <script>
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
 function shareApp(){
-var text = "I built this app from Abuja 🇳🇬 Try Abuja Jobs Tracker - it's FREE: https://abuja-jobs-tracker-app.vercel.app";
-if(navigator.share){ navigator.share({title:'Abuja Jobs Tracker', text:text, url:'https://abuja-jobs-tracker-app.vercel.app'}); }
+var text = "I built this app from Abuja 🇳🇬 Try Abuja Jobs Tracker by Jafar Muktar Nafiu - it's FREE: https://abuja-jobs-tracker-app.vercel.app";
+if(navigator.share){ navigator.share({title:'Abuja Jobs Tracker by Jafar Muktar Nafiu', text:text, url:'https://abuja-jobs-tracker-app.vercel.app'}); }
 else { navigator.clipboard.writeText(text); alert('Link copied! Paste it on WhatsApp'); }
 }
 var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
