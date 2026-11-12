@@ -9,7 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇳🇬</text></svg>">
+<link rel="icon" href="data:image/svg+xml,[STRIPPED]">
 <style>
 *{box-sizing:border-box;font-family:-apple-system,system-ui,sans-serif}
 body{margin:0;background:#f6f7f9;color:#111}
@@ -22,6 +22,7 @@ header{background:#0f172a;color:#fff;padding:20px}
 .card{background:#fff;border-radius:16px;padding:16px;margin-top:16px}
 input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin-bottom:10px;font-size:16px}
 button{width:100%;padding:14px;border:0;border-radius:10px;background:#16a34a;color:#fff;font-size:17px;font-weight:700}
+.shareBtn{background:#fff;color:#0f172a;margin-top:12px}
 .job{background:#f9fafb;border:1px solid #eee;border-radius:12px;padding:12px;margin-top:10px}
 .job b{font-size:17px}
 .job a{color:#2563eb;word-break:break-all}
@@ -30,7 +31,7 @@ button{width:100%;padding:14px;border:0;border-radius:10px;background:#16a34a;co
 </style>
 </head>
 <body>
-<header><h1 style="margin:0">Abuja Jobs Tracker 🇳🇬</h1><p>Track remote jobs from Abuja • Saved on this device</p></header>
+<header><h1 style="margin:0">Abuja Jobs Tracker 🇳🇬</h1><p>Track remote jobs from Abuja • Saved on this device</p><button class="shareBtn" onclick="shareApp()">📤 Share This App With Friends</button></header>
 <div class="wrap">
 <div class="stats">
 <div class="stat"><b id="tTotal">0</b><span>Total</span></div>
@@ -56,6 +57,11 @@ button{width:100%;padding:14px;border:0;border-radius:10px;background:#16a34a;co
 </div>
 <script>
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
+function shareApp(){
+var text = "I built this app from Abuja 🇳🇬 Try Abuja Jobs Tracker - it's FREE: https://abuja-jobs-tracker-app.vercel.app";
+if(navigator.share){ navigator.share({title:'Abuja Jobs Tracker', text:text, url:'https://abuja-jobs-tracker-app.vercel.app'}); }
+else { navigator.clipboard.writeText(text); alert('Link copied! Paste it on WhatsApp'); }
+}
 var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
 var company = document.getElementById('company');
 var role = document.getElementById('role');
