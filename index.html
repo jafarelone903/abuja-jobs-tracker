@@ -140,6 +140,10 @@ function toggleFeatured(id){jobs=jobs.map(j=>j.id==id?{...j,featured:!j.featured
 function boostPay(){
 let email=document.getElementById('boostEmail').value.trim();
 if(!email||!email.includes('@')){alert('Enter your email first for receipt');return}
+window.open('https://paystack.shop/pay/4l4w4776e9','_blank');
+}
+let email=document.getElementById('boostEmail').value.trim();
+if(!email||!email.includes('@')){alert('Enter your email first for receipt');return}
 let handler=PaystackPop.setup({key:PAYSTACK_KEY,email:email,amount:500000,currency:'NGN',ref:''+Math.floor(Math.random()*1000000000+1),callback:function(res){alert('Payment successful! Ref: '+res.reference+'\nNow WhatsApp us your job details.');window.open('https://wa.me/'+MY_WHATSAPP+'?text='+encodeURIComponent('Hi, I just paid for BOOST. Ref: '+res.reference+' My job is: '))},onClose:function(){alert('Payment closed. You can try again.')}});
 handler.openIframe();
 }
