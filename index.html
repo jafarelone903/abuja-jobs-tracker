@@ -138,7 +138,20 @@ function edit(id){let j=jobs.find(x=>x.id==id);company.value=j.company;role.valu
 function changeStatus(id,val){jobs=jobs.map(j=>j.id==id?{...j,status:val}:j);localStorage.setItem('abujaJobsV2',JSON.stringify(jobs));render()}
 function toggleFeatured(id){jobs=jobs.map(j=>j.id==id?{...j,featured:!j.featured}:j);localStorage.setItem('abujaJobsV2',JSON.stringify(jobs));render()}
 function boostPay(){
-window.open('https://wa.me/2347043444378?text=Hello%20I%20want%20to%20boost%20my%20job%20for%20N5000.%20My%20job%20title%20is%3A','_blank');
+  var email = prompt("Enter your email to pay ₦5,000 for Boost:");
+  if(!email) return;
+  PaystackPop.setup({
+    key: PAYSTACK_KEY,
+    email: email,
+    amount: 500000,
+    currency: 'NGN',
+    ref: 'BOOST-'+Math.floor((Math.random()*1000000000)+1),
+    callback: function(response){
+      alert('Payment successful! Ref: ' + response.reference);
+      window.open('https://wa.me/2347043444378?text=' + encodeURIComponent('Hi! I just paid ₦5,000 for Boost. Ref: ' + response.reference), '_blank');
+    },
+    onClose: function(){ alert('Payment window closed.'); }
+  }).openIframe();
 }
 function boostJob(id){let j=jobs.find(x=>x.id==id);let msg=`Hi, I want to BOOST this job for ₦5,000 for 7 days:\n${j.company} - ${j.role}\nLink: ${j.link}`;window.open('https://wa.me/'+MY_WHATSAPP+'?text='+encodeURIComponent(msg))}
 function applyWhatsApp(id){let j=jobs.find(x=>x.id==id);let msg=`Hi, I saw your job on Abuja Jobs Tracker: ${j.company} - ${j.role}. I want to apply. My skill is: `;window.open('https://wa.me/'+MY_WHATSAPP+'?text='+encodeURIComponent(msg))}
