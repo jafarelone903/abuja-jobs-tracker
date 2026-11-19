@@ -51,7 +51,7 @@ button{border:0;border-radius:10px;padding:12px;cursor:pointer;font-weight:700}
 <input id="mySkill" placeholder="Your skill e.g. Excel, Python, Customer Service">
 <input id="myArea" placeholder="Your area e.g. Kubwa, Garki, Wuse 2">
 <input id="mySalary" placeholder="Salary you want e.g. 120000">
-<button class="btn-blue" onclick="aiMatch()">Find My Best Jobs ✨</button>
+<button type="button" class="btn-blue" onclick="aiMatch()">Find My Best Jobs ✨</button>
 <div id="matchResult" style="margin-top:10px;font-size:14px"></div>
 </div>
 <div class="card admin-box">
@@ -87,22 +87,22 @@ button{border:0;border-radius:10px;padding:12px;cursor:pointer;font-weight:700}
 <input type="checkbox" id="featured">
 <label for="featured">⭐ Featured Job (Paid - Show at Top)</label>
 </div>
-<button class="btn" onclick="saveJob()">Save Job</button>
+<button type="button" class="btn" onclick="saveJob()">Save Job</button>
 </div>
 <div class="card">
 <input id="search" placeholder="🔍 Search company or role..." oninput="render()">
 <div class="row" style="margin-top:4px">
-<button onclick="setFilter('All',this)" class="active">All</button>
-<button onclick="setFilter('Saved',this)">Saved</button>
-<button onclick="setFilter('Applied',this)">Applied</button>
-<button onclick="setFilter('Interview',this)">Interview</button>
-<button onclick="setFilter('Offer',this)">Offer</button>
-<button onclick="setFilter('Rejected',this)">Rejected</button>
+<button type="button" onclick="setFilter('All',this)" class="active">All</button>
+<button type="button" onclick="setFilter('Saved',this)">Saved</button>
+<button type="button" onclick="setFilter('Applied',this)">Applied</button>
+<button type="button" onclick="setFilter('Interview',this)">Interview</button>
+<button type="button" onclick="setFilter('Offer',this)">Offer</button>
+<button type="button" onclick="setFilter('Rejected',this)">Rejected</button>
 </div>
 <div class="row" style="margin-top:8px">
-<button class="mini" onclick="shareWhatsApp()">📤 Share to WhatsApp</button>
-<button class="mini" onclick="exportCSV()">⬇️ Export CSV</button>
-<button class="mini danger" onclick="clearAll()">🗑️ Clear All</button>
+<button type="button" class="mini" onclick="shareWhatsApp()">📤 Share to WhatsApp</button>
+<button type="button" class="mini" onclick="exportCSV()">⬇️ Export CSV</button>
+<button type="button" class="mini danger" onclick="clearAll()">🗑️ Clear All</button>
 </div>
 <div id="list"></div>
 <p id="empty" style="text-align:center;color:#888">No jobs yet. Add your first job above 👆</p>
@@ -111,9 +111,8 @@ button{border:0;border-radius:10px;padding:12px;cursor:pointer;font-weight:700}
 <h3 style="margin:0 0 8px">Are you an Employer?</h3>
 <p style="font-size:13px;color:#666;margin:0 0 10px">Boost your job to the top for ₦5,000 for 7 days.</p>
 <input id="boostEmail" placeholder="Your email for receipt e.g. you@gmail.com">
-
 <p style="font-size:12px;color:#999;margin:8px 0 0">After payment, WhatsApp us your job details.</p>
-<button class="mini wa" onclick="boostPay()" style="background:#00C853;color:white;width:100%">Pay ₦5,000 with Paystack 💳</button>
+<button type="button" class="mini wa" onclick="boostPay();return false;" style="background:#00C853;color:white;width:100%">Pay ₦5,000 with Paystack 💳</button>
 </div>
 </div>
 <script>
@@ -123,55 +122,99 @@ let editId=null;
 let MY_WHATSAPP="2347043444378";
 let PAYSTACK_KEY="pk_test_07d80502fc5f0f2ded41cd770a4eeff746a75b34";
 function saveJob(){
-let c=company.value.trim(),r=role.value.trim();
+let c=document.getElementById('company').value.trim(),r=document.getElementById('role').value.trim();
 if(!c||!r){alert('Add Company + Role');return}
-let data={id:editId||Date.now(),company:c,role:r,link:link.value.trim(),status:status.value,salary:salary.value.trim(),deadline:deadline.value,appliedDate:appliedDate.value,notes:notes.value.trim(),featured:featured.checked};
+let data={id:editId||Date.now(),company:c,role:r,link:document.getElementById('link').value.trim(),status:document.getElementById('status').value,salary:document.getElementById('salary').value.trim(),deadline:document.getElementById('deadline').value,appliedDate:document.getElementById('appliedDate').value,notes:document.getElementById('notes').value.trim(),featured:document.getElementById('featured').checked};
 if(editId){jobs=jobs.map(j=>j.id==editId?data:j);editId=null}else jobs.unshift(data);
 localStorage.setItem('abujaJobsV2',JSON.stringify(jobs));
 ['company','role','link','salary','deadline','appliedDate','notes'].forEach(id=>document.getElementById(id).value='');
-featured.checked=false;render();
+document.getElementById('featured').checked=false;render();
 }
 function setFilter(f,btn){filter=f;document.querySelectorAll('.row button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render()}
 function del(id){if(confirm('Delete this job?')){jobs=jobs.filter(j=>j.id!=id);localStorage.setItem('abujaJobsV2',JSON.stringify(jobs));render()}}
-function edit(id){let j=jobs.find(x=>x.id==id);company.value=j.company;role.value=j.role;link.value=j.link;status.value=j.status;salary.value=j.salary;deadline.value=j.deadline;appliedDate.value=j.appliedDate;notes.value=j.notes;featured.checked=!!j.featured;editId=id;window.scrollTo({top:0,behavior:'smooth'})}
+function edit(id){let j=jobs.find(x=>x.id==id);document.getElementById('company').value=j.company;document.getElementById('role').value=j.role;document.getElementById('link').value=j.link;document.getElementById('status').value=j.status;document.getElementById('salary').value=j.salary;document.getElementById('deadline').value=j.deadline;document.getElementById('appliedDate').value=j.appliedDate;document.getElementById('notes').value=j.notes;document.getElementById('featured').checked=!!j.featured;editId=id;window.scrollTo({top:0,behavior:'smooth'})}
 function changeStatus(id,val){jobs=jobs.map(j=>j.id==id?{...j,status:val}:j);localStorage.setItem('abujaJobsV2',JSON.stringify(jobs));render()}
 function toggleFeatured(id){jobs=jobs.map(j=>j.id==id?{...j,featured:!j.featured}:j);localStorage.setItem('abujaJobsV2',JSON.stringify(jobs));render()}
 function boostPay(){
-  var emailInput = document.getElementById('boostEmail');
-  var email = emailInput ? emailInput.value.trim() : '';
-  if(!email || email.indexOf('@') === -1){
-    alert('Please enter a valid email first, e.g. you@gmail.com');
-    if(emailInput) emailInput.focus();
-    return;
-  }
-  if(typeof PaystackPop === 'undefined'){
-    alert('Paystack is still loading. Please wait 3 seconds and try again.');
-    return;
-  }
-  PaystackPop.setup({
-    key: PAYSTACK_KEY,
-    email: email,
-    amount: 500000,
-    currency: 'NGN',
-    ref: 'BOOST-'+Math.floor((Math.random()*1000000000)+1),
-    callback: function(response){
-      alert('Payment successful! Ref: ' + response.reference);
-      window.open('https://wa.me/2347043444378?text=' + encodeURIComponent('Hi! I just paid ₦5,000 for Boost. Ref: ' + response.reference), '_blank');
-    },
-    onClose: function(){ alert('Payment window closed.'); }
-  }).openIframe();
+  try{
+    var emailInput=document.getElementById('boostEmail');
+    var email=emailInput?emailInput.value.trim().toLowerCase():'';
+    if(!email||email.indexOf('@')===-1){alert('Please enter a valid email first, e.g. you@gmail.com');if(emailInput)emailInput.focus();return;}
+    if(typeof PaystackPop==='undefined'){alert('Paystack is still loading. Please wait 3 seconds and try again, or check your network.');return;}
+    var handler=PaystackPop.setup({
+      key:PAYSTACK_KEY,
+      email:email,
+      amount:500000,
+      currency:'NGN',
+      ref:'BOOST-'+Math.floor((Math.random()*1000000000)+1),
+      callback:function(response){
+        alert('Payment successful! Ref: '+response.reference);
+        window.open('https://wa.me/'+MY_WHATSAPP+'?text='+encodeURIComponent('Hi! I just paid ₦5,000 for Boost. Ref: '+response.reference),'_blank');
+      },
+      onClose:function(){alert('Payment window closed.');}
+    });
+    handler.openIframe();
+  }catch(e){alert('Paystack error: '+e.message);}
 }
 function boostJob(id){let j=jobs.find(x=>x.id==id);let msg=`Hi, I want to BOOST this job for ₦5,000 for 7 days:\n${j.company} - ${j.role}\nLink: ${j.link}`;window.open('https://wa.me/'+MY_WHATSAPP+'?text='+encodeURIComponent(msg))}
 function applyWhatsApp(id){let j=jobs.find(x=>x.id==id);let msg=`Hi, I saw your job on Abuja Jobs Tracker: ${j.company} - ${j.role}. I want to apply. My skill is: `;window.open('https://wa.me/'+MY_WHATSAPP+'?text='+encodeURIComponent(msg))}
 function aiMatch(){
-let skill=mySkill.value.trim().toLowerCase();
-let area=myArea.value.trim().toLowerCase();
-let want=parseInt(mySalary.value||'0');
-if(!skill){matchResult.innerHTML='Type a skill first e.g. Excel';return}
-if(!jobs.length){matchResult.innerHTML='No jobs yet. Add jobs first.';return}
+let skill=document.getElementById('mySkill').value.trim().toLowerCase();
+let area=document.getElementById('myArea').value.trim().toLowerCase();
+let want=parseInt(document.getElementById('mySalary').value||'0');
+let out=document.getElementById('matchResult');
+if(!skill){out.innerHTML='Type a skill first e.g. Excel';return}
+if(!jobs.length){out.innerHTML='No jobs yet. Add jobs first.';return}
 let scored=jobs.map(j=>{
 let score=30;
 let text=(j.role+' '+j.notes+' '+j.company).toLowerCase();
 if(text.includes(skill)) score+=50;
 if(area && text.includes(area)) score+=10;
-let sal
+let sal=parseInt(j.salary||'0');
+if(want && sal && sal>=want) score+=10;
+return {j,score};
+}).sort((a,b)=>b.score-a.score);
+out.innerHTML='<b>Best match for you:</b><br>'+scored.slice(0,3).map(x=>`✅ ${x.j.company} - ${x.j.role} (${x.score}% match)`).join('<br>');
+}
+function render(){
+let list=document.getElementById('list');
+let q=document.getElementById('search').value.toLowerCase();
+let shown=jobs.filter(j=>{
+if(filter!=='All' && !j.status.includes(filter)) return false;
+if(q && !(j.company+' '+j.role).toLowerCase().includes(q)) return false;
+return true;
+});
+shown.sort((a,b)=>(b.featured?1:0)-(a.featured?1:0));
+document.getElementById('tTotal').textContent=jobs.length;
+document.getElementById('tApplied').textContent=jobs.filter(j=>j.status.includes('Applied')).length;
+document.getElementById('tInt').textContent=jobs.filter(j=>j.status.includes('Interview')).length;
+document.getElementById('tOffer').textContent=jobs.filter(j=>j.status.includes('Offer')).length;
+document.getElementById('aTotal').textContent=jobs.length;
+document.getElementById('aFeat').textContent=jobs.filter(j=>j.featured).length;
+document.getElementById('aOffer').textContent=jobs.filter(j=>j.status.includes('Offer')).length;
+document.getElementById('aRev').textContent='₦'+(jobs.filter(j=>j.featured).length*5000).toLocaleString();
+let skills={};
+jobs.forEach(j=>{j.notes.split(',').forEach(s=>{s=s.trim();if(s)skills[s]=(skills[s]||0)+1})});
+document.getElementById('aSkills').innerHTML=Object.entries(skills).sort((a,b)=>b[1]-a[1]).slice(0,5).map(x=>x[0]+' ('+x[1]+')').join(' • ')||'No data yet';
+document.getElementById('empty').style.display=shown.length?'none':'block';
+list.innerHTML=shown.map(j=>`
+<div class="job ${j.featured?'featured':''}">
+<div class="top"><b>${j.company} - ${j.role}</b>${j.featured?'<span class="badge badge-featured">⭐ FEATURED</span>':''}</div>
+<small>${j.status} • ${j.salary?('₦'+j.salary):'Salary not listed'} ${j.deadline?('• Deadline: '+j.deadline):''}</small>
+<small>${j.notes||''}</small>
+<div class="row" style="margin-top:8px">
+<button type="button" class="mini" onclick="edit(${j.id})">✏️ Edit</button>
+<button type="button" class="mini" onclick="applyWhatsApp(${j.id})">Apply</button>
+<button type="button" class="mini" onclick="boostJob(${j.id})">🚀 Boost ₦5k</button>
+<button type="button" class="mini danger" onclick="del(${j.id})">Delete</button>
+</div>
+<select onchange="changeStatus(${j.id},this.value)" style="margin-top:8px"><option>📌 Saved</option><option>📩 Applied</option><option>🎤 Interview</option><option>🎉 Offer</option><option>❌ Rejected</option></select>
+</div>`).join('');
+}
+function shareWhatsApp(){let txt='My Abuja Jobs:\n'+jobs.map(j=>`${j.company} - ${j.role} (${j.status})`).join('\n');window.open('https://wa.me/?text='+encodeURIComponent(txt))}
+function exportCSV(){let csv='Company,Role,Status,Salary,Deadline,Notes\n'+jobs.map(j=>`"${j.company}","${j.role}","${j.status}","${j.salary}","${j.deadline}","${j.notes}"`).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='abuja-jobs.csv';a.click()}
+function clearAll(){if(confirm('Clear all jobs?')){jobs=[];localStorage.removeItem('abujaJobsV2');render()}}
+render();
+</script>
+</body>
+</html>
