@@ -137,8 +137,17 @@ function edit(id){let j=jobs.find(x=>x.id==id);company.value=j.company;role.valu
 function changeStatus(id,val){jobs=jobs.map(j=>j.id==id?{...j,status:val}:j);localStorage.setItem('abujaJobsV2',JSON.stringify(jobs));render()}
 function toggleFeatured(id){jobs=jobs.map(j=>j.id==id?{...j,featured:!j.featured}:j);localStorage.setItem('abujaJobsV2',JSON.stringify(jobs));render()}
 function boostPay(){
-  var email = prompt("Enter your email to pay ₦5,000 for Boost:");
-  if(!email) return;
+  var emailInput = document.getElementById('boostEmail');
+  var email = emailInput ? emailInput.value.trim() : '';
+  if(!email || email.indexOf('@') === -1){
+    alert('Please enter a valid email first, e.g. you@gmail.com');
+    if(emailInput) emailInput.focus();
+    return;
+  }
+  if(typeof PaystackPop === 'undefined'){
+    alert('Paystack is still loading. Please wait 3 seconds and try again.');
+    return;
+  }
   PaystackPop.setup({
     key: PAYSTACK_KEY,
     email: email,
