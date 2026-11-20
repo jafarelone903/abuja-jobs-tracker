@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "company": "Abuja company",
+    "role": "HR Generalist",
+    "salary": "300000",
+    "deadline": "2026-11-28",
+    "skills": "Abuja recruitment people Abuja",
+    "link": "https://example.com/hr-job",
+    "boosted": false
+  },
+  {
+    "id": 2,
+    "company": "Abuja restaurant",
+    "role": "Chef",
+    "salary": "150000",
+    "deadline": "2026-11-28",
+    "skills": "Cooking kitchen food Abuja",
+    "link": "https://example.com/chef-job",
+    "boosted": false
+  },
+  {
+    "id": 3,
+    "company": "Tech team africa",
+    "role": "social media manager",
+    "salary": "150000",
+    "deadline": "2026-11-27",
+    "skills": "Social media content canva Abuja",
+    "link": "https://example.com/social-media-job",
+    "boosted": false
+  }
+]
