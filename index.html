@@ -109,7 +109,8 @@ function renderMine(){
     <h3>${j.company} - ${j.role}</h3>
     <p>${j.status||'Saved'} • ${money(j.salary)} • Deadline: ${j.deadline||''}</p>
     <p>${j.skills||''}</p>
-    ${j.link?`<a href="${j.link}" target="_blank">🔗 Apply Here</a><br>`:''}
+    ${j.link?`<a href="${j.link}" target="_blank">🔗 Apply Here</a> `:''}
+${j.whatsapp?`<a href="https://wa.me/${j.whatsapp}?text=${encodeURIComponent('Hi I want to apply for '+j.role+' at '+j.company)}" target="_blank">📲 Apply on WhatsApp</a><br>`:''}
     <select onchange="changeStatus(${i},this.value)">
     <option ${j.status=='Saved'?'selected':''}>Saved</option>
     <option ${j.status=='Applied'?'selected':''}>Applied</option>
