@@ -120,7 +120,7 @@ let jobs=JSON.parse(localStorage.getItem('abujaJobsV2')||'[]');
 let filter='All';
 let editId=null;
 let MY_WHATSAPP="2347043444378";
-let PAYSTACK_KEY="pk_live_df6ba825b71fcbf594d7f97de3dca530d911f050";
+let PAYSTACK_KEY="YOUR_EXISTING_KEY_KEEP_AS_IS";
 function saveJob(){
 let c=document.getElementById('company').value.trim(),r=document.getElementById('role').value.trim();
 if(!c||!r){alert('Add Company + Role');return}
@@ -202,6 +202,7 @@ list.innerHTML=shown.map(j=>`
 <div class="top"><b>${j.company} - ${j.role}</b>${j.featured?'<span class="badge badge-featured">⭐ FEATURED</span>':''}</div>
 <small>${j.status} • ${j.salary?('₦'+j.salary):'Salary not listed'} ${j.deadline?('• Deadline: '+j.deadline):''}</small>
 <small>${j.notes||''}</small>
+${j.link?`<a href="${j.link}" target="_blank" style="display:inline-block;margin:4px 0;color:#2563eb;font-weight:700;font-size:14px">🔗 Apply Here</a>`:''}
 <div class="row" style="margin-top:8px">
 <button type="button" class="mini" onclick="edit(${j.id})">✏️ Edit</button>
 <button type="button" class="mini" onclick="applyWhatsApp(${j.id})">Apply</button>
@@ -211,8 +212,8 @@ list.innerHTML=shown.map(j=>`
 <select onchange="changeStatus(${j.id},this.value)" style="margin-top:8px"><option>📌 Saved</option><option>📩 Applied</option><option>🎤 Interview</option><option>🎉 Offer</option><option>❌ Rejected</option></select>
 </div>`).join('');
 }
-function shareWhatsApp(){let txt='My Abuja Jobs:\n'+jobs.map(j=>`${j.company} - ${j.role} (${j.status})`).join('\n');window.open('https://wa.me/?text='+encodeURIComponent(txt))}
-function exportCSV(){let csv='Company,Role,Status,Salary,Deadline,Notes\n'+jobs.map(j=>`"${j.company}","${j.role}","${j.status}","${j.salary}","${j.deadline}","${j.notes}"`).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='abuja-jobs.csv';a.click()}
+function shareWhatsApp(){let txt='My Abuja Jobs:\n'+jobs.map(j=>`${j.company} - ${j.role} (${j.status}) - ${j.link||'No link'}`).join('\n');window.open('https://wa.me/?text='+encodeURIComponent(txt))}
+function exportCSV(){let csv='Company,Role,Status,Salary,Deadline,Notes,Link\n'+jobs.map(j=>`"${j.company}","${j.role}","${j.status}","${j.salary}","${j.deadline}","${j.notes}","${j.link||''}"`).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='abuja-jobs.csv';a.click()}
 function clearAll(){if(confirm('Clear all jobs?')){jobs=[];localStorage.removeItem('abujaJobsV2');render()}}
 render();
 </script>
